@@ -1,6 +1,8 @@
 def call(body) {
-    // evaluate the body block, and collect configuration into the object
+
     def config = [:]
+    def utils = new symphony.java.Utils()
+
     body.resolveStrategy = Closure.DELEGATE_FIRST
     body.delegate = config
     body()
@@ -27,12 +29,9 @@ def call(body) {
 
             stage('Build Image') {
                 environment {
-                    PROJECT_VERSION = sh(
-                        returnStdout: true,
-                        script: 'awk -F \'=\' \'/version/ { print $2 }\' ./target/maven-archiver/pom.properties'
-                    ).trim()
-                    IMAGE_NAME = "${JOB_NAME}".tokenize('/').last()
-                    IMAGE_TAG = "ib-${PROJECT_VERSION}.${BUILD_ID}"
+                    PROJECT_VERSION = utils.projectVersion()
+                    IMAGE_NAME = utils.imageName("${JOB_NAME}")
+                    IMAGE_TAG = utils.imageTag('ib', "${BUILD_ID}")
                 }
 
                 steps {

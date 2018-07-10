@@ -31,7 +31,7 @@ def call(body) {
                 environment {
                     PROJECT_VERSION = utils.projectVersion()
                     IMAGE_NAME = utils.imageName("${JOB_NAME}")
-                    IMAGE_TAG = utils.imageTag('ib', "${BUILD_ID}")
+                    IMAGE_TAG = utils.imageTag('rc', "${BUILD_ID}")
                 }
 
                 steps {
