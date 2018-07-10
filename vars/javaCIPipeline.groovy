@@ -1,6 +1,8 @@
 def call(body) {
 
     def config = [:]
+    def utils  = new symphony.java.Utils()
+
     body.resolveStrategy = Closure.DELEGATE_FIRST
     body.delegate = config
     body()
@@ -20,7 +22,8 @@ def call(body) {
                     echo 'Stage - Unit Test'
                     withMaven(globalMavenSettingsConfig: config.mavenSettingsConfig,
                               mavenSettingsConfig: config.mavenSettingsConfig) {
-                        devfactory(portfolio: 'TestPFAurea', product: 'Symphony', types: 'Java') {
+                        devfactory(portfolio: 'TestPFAurea', types: 'Java', product: 'Symphony',
+                                   productVersion: utils.imageName("${JOB_NAME}")) {
                             sh 'mvn clean test'
                         }
                     }
